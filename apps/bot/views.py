@@ -10,7 +10,7 @@ from apps.users.models import Profile
 import json
 
 class BotConnectionAPIView(APIView):
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
