@@ -31,5 +31,6 @@ class BotConnectionAPIView(APIView):
 class ChatUpdateAPIView(APIView):
     def post(self, request):
         r = request.POST
+        print(r)
         return Response(data=r)
 
