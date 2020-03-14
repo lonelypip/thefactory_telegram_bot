@@ -31,6 +31,8 @@ class ChatUpdateAPIView(APIView):
     def post(self, request):
         r = request.data
         token = extract_token_code(r['message']['text'])
-        print(token)
-        return Response(data=r)
+        if token:
+            chat_id = r['message']['chat']['id']
+            print(chat_id)
+            return Response(data=r)
 
