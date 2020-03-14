@@ -33,11 +33,16 @@ class ChatUpdateAPIView(APIView):
         token = extract_token_code(r['message']['text'])
         chat_id = r['message']['chat']['id']
         if token:
-            profile = Profile.objects.get(token_for_bot=token)
-            profile.chat_id = chat_id
-            profile.save()
-            return Response(data=r)
-
+            if Profile.objects.filter(token_for_bot=token).exists():
+                profile = Profile.objects.get(token_for_bot=token)
+                profile.chat_id = chat_id
+                profile.save()
+                send_message_telegram(chat_id, text='Welcome!')
+                return Response(data=r)
+            else:
+                send_message_telegram(chat_id, text="I don't know who you are!")
+                return Response(data=r)
+            
         send_message_telegram(
             chat_id,
             text='Please start from this website '
