@@ -5,7 +5,7 @@ from rest_framework import status
 from random import choice
 from string import ascii_letters
 from apps.users.models import Profile
-from .functions import extract_token_code
+from .functions import extract_token_code, send_message_telegram
 
 import json
 
@@ -31,8 +31,20 @@ class ChatUpdateAPIView(APIView):
     def post(self, request):
         r = request.data
         token = extract_token_code(r['message']['text'])
+        chat_id = r['message']['chat']['id']
         if token:
-            chat_id = r['message']['chat']['id']
-            print(chat_id)
+            profile = Profile.objects.get(token_for_bot=token)
+            profile.chat_id = chat_id
+            profile.save()
             return Response(data=r)
+
+        send_message_telegram(
+            chat_id,
+            text='Please start from this website '
+                 '<a href="https://factoryproject.herokuapp.com/users/token-auth/">'
+                    'Website'
+                 '</a>'
+        )
+
+        return Response(data=r)
 
