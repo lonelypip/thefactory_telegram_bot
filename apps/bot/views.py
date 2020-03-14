@@ -32,5 +32,8 @@ class ChatUpdateAPIView(APIView):
     def post(self, request):
         r = request.POST
         print(r)
+        print(dir(r))
+        print(request)
+        print(dir(request.POST))
         return Response(data=r)
 
