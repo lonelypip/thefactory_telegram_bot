@@ -1,4 +1,3 @@
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,8 +9,7 @@ from apps.users.models import Profile
 import json
 
 class BotConnectionAPIView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         user = request.user
@@ -31,6 +29,7 @@ class BotConnectionAPIView(APIView):
 class ChatUpdateAPIView(APIView):
     def post(self, request):
         r = request.data
-        print(r)
+        token = r['message']['text'].split()[1]
+        print(token)
         return Response(data=r)
 
