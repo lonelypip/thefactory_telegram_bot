@@ -5,6 +5,7 @@ from rest_framework import status
 from random import choice
 from string import ascii_letters
 from apps.users.models import Profile
+from .functions import extract_token_code
 
 import json
 
@@ -29,7 +30,7 @@ class BotConnectionAPIView(APIView):
 class ChatUpdateAPIView(APIView):
     def post(self, request):
         r = request.data
-        token = r['message']['text'].split()[1]
+        token = extract_token_code(r['message']['text'])
         print(token)
         return Response(data=r)
 

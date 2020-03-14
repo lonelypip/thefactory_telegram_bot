@@ -8,3 +8,7 @@ def send_message_telegram(chat_id, text):
     r = requests.post(URL, data=data)
     return r.json()
 
+
+def extract_token_code(text):
+    return text.split()[1] if len(text.split()) > 1 else None
+
