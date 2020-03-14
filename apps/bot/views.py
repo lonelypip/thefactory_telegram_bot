@@ -30,10 +30,7 @@ class BotConnectionAPIView(APIView):
 
 class ChatUpdateAPIView(APIView):
     def post(self, request):
-        r = request.POST
+        r = request.data
         print(r)
-        print(request.data)
-        # print(request)
-        # print(dir(request.POST.get))
         return Response(data=r)
 
