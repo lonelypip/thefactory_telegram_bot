@@ -7,7 +7,7 @@ from random import choice
 from string import ascii_letters
 from apps.users.models import Profile
 
-
+import json
 
 class BotConnectionAPIView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -31,8 +31,8 @@ class BotConnectionAPIView(APIView):
 class ChatUpdateAPIView(APIView):
     def post(self, request):
         r = request.POST
-        print(r.json())
-        # print(dir(r))
+        print(r)
+        print(request.data)
         # print(request)
         # print(dir(request.POST.get))
         return Response(data=r)
