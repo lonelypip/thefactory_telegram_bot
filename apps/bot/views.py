@@ -52,7 +52,6 @@ class ChatUpdateAPIView(APIView):
             chat_id,
             text='Please start from this website '
                  'https://factoryproject.herokuapp.com/users/token-auth/ '
-                  'Website'
         )
         return Response(data=r)
 
@@ -65,7 +64,7 @@ class SendMessageAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         if request.data.get('text'):
             text = request.data['text']
-            print(request.user.first_name)
+
             send_message_telegram(
                 request.user.profile.chat_id,
                 text=
