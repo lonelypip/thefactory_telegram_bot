@@ -2,12 +2,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import CreateAPIView
 from random import choice
 from string import ascii_letters
 from apps.users.models import Profile
 from .functions import extract_token_code, send_message_telegram
+from . serializers import SendMessageSerializer
+from ..users.models import Message
 
-import json
+
+
 
 class BotConnectionAPIView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -32,8 +36,10 @@ class ChatUpdateAPIView(APIView):
         r = request.data
         token = extract_token_code(r['message']['text'])
         chat_id = r['message']['chat']['id']
+
         if token:
-            if Profile.objects.filter(token_for_bot=token).exists():
+            print(token)
+            if Profile.objects.filter(token_for_bot=str(token)).exists():
                 profile = Profile.objects.get(token_for_bot=token)
                 profile.chat_id = chat_id
                 profile.save()
@@ -42,14 +48,33 @@ class ChatUpdateAPIView(APIView):
             else:
                 send_message_telegram(chat_id, text="I don't know who you are!")
                 return Response(data=r)
-            
+
         send_message_telegram(
             chat_id,
             text='Please start from this website '
-                 '<a href="https://factoryproject.herokuapp.com/users/token-auth/">'
-                    'Website'
-                 '</a>'
+                 'https://factoryproject.herokuapp.com/users/token-auth/ '
+                  'Website'
         )
-
         return Response(data=r)
+
+
+class SendMessageAPIView(CreateAPIView):
+    queryset = Message.objects.all()
+    serializer_class = SendMessageSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        if request.data.get('text'):
+            text = request.data['text']
+            send_message_telegram(
+                request.user.profile.chat_id,
+                text=
+                f'{request.user.first_name}, я получил от тебя сообщение: {text}'
+            )
+            message = Message.objects.create(user=request.user,
+                                             text=text)
+            serializer = SendMessageSerializer(message, context={'request': request})
+            return Response(status=status.HTTP_201_CREATED, data=serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'BOT': 'Text field is required!'})
 
