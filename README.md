@@ -21,7 +21,7 @@
 > https://factoryproject.herokuapp.com/users/token-auth/
 1. **username** (*Str*) - Логин пользователя.
 2. **password** (*Str*) -  Пароль.
-**Для авторизации** - Добавляем в хедер: Authorization Token: Your token
+**Для авторизации** - Добавляем в хедер: Authorization: Token Your token
 
 
 **Bot connection. GET request** 
