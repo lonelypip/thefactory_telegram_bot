@@ -8,6 +8,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
         required=True,
         label='Email',
         validators=[UniqueValidator(queryset=User.objects.all())])
+    first_name = serializers.CharField(
+        required=True,
+        label='First Name')
     password = serializers.CharField(label='Password', min_length=8, write_only=True)
     password2 = serializers.CharField(label='Confirm Password', write_only=True)
 
