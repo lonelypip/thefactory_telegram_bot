@@ -38,7 +38,6 @@ class ChatUpdateAPIView(APIView):
         chat_id = r['message']['chat']['id']
 
         if token:
-            print(token)
             if Profile.objects.filter(token_for_bot=str(token)).exists():
                 profile = Profile.objects.get(token_for_bot=token)
                 profile.chat_id = chat_id
@@ -66,6 +65,7 @@ class SendMessageAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         if request.data.get('text'):
             text = request.data['text']
+            print(request.user.first_name)
             send_message_telegram(
                 request.user.profile.chat_id,
                 text=
